@@ -25,7 +25,7 @@ Step 3) Checks TCP SYN/ACK TCP flags for:  02 04 05 b4 01 01 04 02 01 03 03 05
 -- | diff = 0xc123e
 -- | Result:  Handshake confirmed.  Checking flags.
 -- | TCP flags: 2 04 05 b4 1 01 04 02 1 03 03 05
--- |_Result:  Flags match.  Confirmed infected!
+-- |_Result:  Flags match.  POTENTIALLY COMPROMISED!
 
 -- This script requires modifying nselib packet to add ability to set ack values
 
@@ -107,14 +107,14 @@ local processresponse = function(layer3, host)
     stdnse.print_debug("tcpflags3 is:  %s", tcpflags3)
     output = output .. "\r\nTCP flags: " .. stdnse.tohex(tcpflags1, {separator = " ", group = 2}) .. " " .. stdnse.tohex(tcpflags2, {separator = " ", group = 2}) .. " " .. stdnse.tohex(tcpflags3, {separator = " ", group = 2})
     if tcpflags1 == 33818036 and tcpflags2 == 16843778 and tcpflags3 == 16974597 then
-      output = output .. "\r\nResult:  Flags match.  Confirmed.\r\nInfected:" .. packet.toip(host.bin_ip)
+      output = output .. "\r\nResult:  Flags match.  POTENTIALLY.\r\COMPROMISED:" .. packet.toip(host.bin_ip)
     else
-      output = output .. "\r\nResult:  Flags don't match!  May not be infected."
+      output = output .. "\r\nResult:  Flags don't match!  May not be compromised."
     end
   else
     stdnse.print_debug("reportclean is:  %s", reportclean)
     if reportclean == "1" then
-      output = output .. "\r\nResult:  Not infected"
+      output = output .. "\r\nResult:  Good Posture: Appears not to be compromised."
     else
       output = ""
     end
